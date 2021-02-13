@@ -1,4 +1,5 @@
-const PersonController = require('../controllers/person.controller');
+const NoteController = require('../controllers/note.controller');
 module.exports = function(app){
-    app.get('/api', PersonController.index);
+    app.get('/api', NoteController.index);
+    app.post('/api/note', NoteController.createNote);
 }
