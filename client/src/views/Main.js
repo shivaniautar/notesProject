@@ -1,17 +1,49 @@
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import NoteForm from '../components/NoteForm';
+import NoteList from '../components/NoteList';
+import axios from 'axios';
+
+
+
 export default () => {
+    const [notes, setNotes] = useState([]);
+    const [loaded, setLoaded] = useState(false);
+    useEffect(()=>{
+        axios.get('http://localhost:8000/api/notes')
+            .then(res=>{
+                setNotes(res.data);
+                setLoaded(true);
+            });
+    },[]);
+    const removeFromDom = noteId => {
+        setNotes(notes.filter(note => note._id != noteId));
+    }
+    const createNote = note => {
+        axios.post('http://localhost:8000/api/notes', note)
+            .then(res=>{
+                setNotes([...notes, res.data]);
+            })
+    }
     return (
         <div>
-           <NoteForm/>
+           <NoteForm onSubmitProp={createNote} initialFirstName="" initialLastName="" entry=""/>
+           <hr/>
+           {loaded && <NoteList notes={notes} removeFromDom={removeFromDom}/>}
         </div>
     )
 }
 
 
 
-
+// import React, { useEffect, useState } from 'react';
+// import NoteForm from '../components/NoteForm';
+// export default () => {
+//     return (
+//         <div>
+//            <NoteForm/>
+//         </div>
+//     )
+// }
 
 // we will make an api call and display our message
 
